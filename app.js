@@ -1,0 +1,246 @@
+// DOM elements
+const btn = document.querySelector('.talk');
+const content = document.querySelector('.content');
+
+// Speech synthesis setup
+let speechSynthesis = window.speechSynthesis;
+let speaking = false;
+
+// Speech recognition setup
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition;
+
+// Initialize speech recognition
+function initSpeechRecognition() {
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onstart = () => {
+            content.textContent = "Listening...";
+            btn.style.background = '#ff4444';
+        };
+        
+        recognition.onresult = (event) => {
+            const currentIndex = event.resultIndex;
+            const transcript = event.results[currentIndex][0].transcript;
+            content.textContent = transcript;
+            takeCommand(transcript.toLowerCase());
+        };
+        
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            content.textContent = "Error: " + event.error;
+            btn.style.background = '#4CAF50';
+            speak("Sorry, I couldn't hear you properly. Please try again.");
+        };
+        
+        recognition.onend = () => {
+            btn.style.background = '#4CAF50';
+        };
+    } else {
+        content.textContent = "Speech recognition not supported in this browser";
+        btn.disabled = true;
+    }
+}
+
+// Enhanced speak function with proper cleanup
+function speak(text) {
+    if (speaking) {
+        speechSynthesis.cancel();
+    }
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1;
+    utterance.volume = 1;
+    utterance.pitch = 1;
+    
+    utterance.onstart = () => {
+        speaking = true;
+    };
+    
+    utterance.onend = () => {
+        speaking = false;
+    };
+    
+    utterance.onerror = (event) => {
+        console.error('Speech synthesis error:', event.error);
+        speaking = false;
+    };
+    
+    speechSynthesis.speak(utterance);
+}
+
+// Greeting function
+function wishMe() {
+    const day = new Date();
+    const hour = day.getHours();
+    
+    if (hour >= 0 && hour < 12) {
+        speak("Good Morning Boss...");
+    } else if (hour >= 12 && hour < 17) {
+        speak("Good Afternoon Master...");
+    } else {
+        speak("Good Evening Sir...");
+    }
+}
+
+// Enhanced command processing
+function takeCommand(message) {
+    console.log('Processing command:', message);
+    
+    // Greeting commands
+    if (message.includes('hey') || message.includes('hello') || message.includes('hi')) {
+        speak("Hello Sir, How May I Help You?");
+        return;
+    }
+    
+    // Website opening commands
+    if (message.includes("open google")) {
+        window.open("https://google.com", "_blank");
+        speak("Opening Google...");
+        return;
+    }
+    
+    if (message.includes("open youtube")) {
+        window.open("https://youtube.com", "_blank");
+        speak("Opening Youtube...");
+        return;
+    }
+    
+    if (message.includes("open facebook")) {
+        window.open("https://facebook.com", "_blank");
+        speak("Opening Facebook...");
+        return;
+    }
+    
+    if (message.includes("open github")) {
+        window.open("https://github.com", "_blank");
+        speak("Opening GitHub...");
+        return;
+    }
+    
+    if (message.includes("open stackoverflow")) {
+        window.open("https://stackoverflow.com", "_blank");
+        speak("Opening Stack Overflow...");
+        return;
+    }
+    
+    // Search commands
+    if (message.includes('what is') || message.includes('who is') || message.includes('what are') || message.includes('how to')) {
+        const searchQuery = message.replace(/^(what is|who is|what are|how to)\s+/i, '').trim();
+        if (searchQuery) {
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`, "_blank");
+            speak(`Searching for ${searchQuery} on Google`);
+        }
+        return;
+    }
+    
+    // Wikipedia commands
+    if (message.includes('wikipedia')) {
+        const wikiQuery = message.replace(/wikipedia/i, '').trim();
+        if (wikiQuery) {
+            window.open(`https://en.wikipedia.org/wiki/${encodeURIComponent(wikiQuery)}`, "_blank");
+            speak(`Searching Wikipedia for ${wikiQuery}`);
+        }
+        return;
+    }
+    
+    // Time and date commands
+    if (message.includes('time')) {
+        const time = new Date().toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+        });
+        speak(`The current time is ${time}`);
+        return;
+    }
+    
+    if (message.includes('date')) {
+        const date = new Date().toLocaleDateString('en-US', { 
+            weekday: 'long',
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        speak(`Today's date is ${date}`);
+        return;
+    }
+    
+    // Calculator command
+    if (message.includes('calculator')) {
+        try {
+            window.open('Calculator:///');
+            speak("Opening Calculator");
+        } catch (error) {
+            speak("I'm sorry, I couldn't open the calculator. You can use the Windows calculator instead.");
+        }
+        return;
+    }
+    
+    // Weather command (placeholder)
+    if (message.includes('weather')) {
+        speak("I'm sorry, I don't have access to weather information yet. You can check a weather website.");
+        return;
+    }
+    
+    // Music commands
+    if (message.includes('play music') || message.includes('music')) {
+        speak("I'm sorry, I can't play music directly. You can open Spotify or YouTube for music.");
+        return;
+    }
+    
+    // Help command
+    if (message.includes('help') || message.includes('what can you do')) {
+        speak("I can help you with opening websites, searching the internet, telling time and date, and answering questions. Just ask me what you need!");
+        return;
+    }
+    
+    // Default search for anything else
+    if (message.trim().length > 0) {
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(message)}`, "_blank");
+        speak(`I found some information for ${message} on Google`);
+    }
+}
+
+// Event listeners
+btn.addEventListener('click', () => {
+    if (recognition && !speaking) {
+        try {
+            recognition.start();
+        } catch (error) {
+            console.error('Error starting recognition:', error);
+            content.textContent = "Error starting recognition";
+        }
+    }
+});
+
+// Initialize on page load
+window.addEventListener('load', () => {
+    initSpeechRecognition();
+    speak("Initializing JARVIS...");
+    setTimeout(() => {
+        wishMe();
+    }, 2000);
+});
+
+// Handle page visibility changes
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && speaking) {
+        speechSynthesis.cancel();
+        speaking = false;
+    }
+});
+
+// Handle beforeunload to clean up
+window.addEventListener('beforeunload', () => {
+    if (speaking) {
+        speechSynthesis.cancel();
+    }
+    if (recognition) {
+        recognition.stop();
+    }
+});
