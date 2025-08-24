@@ -127,7 +127,42 @@ function takeCommand(message) {
         speak("Opening Stack Overflow...");
         return;
     }
-    
+        // NEW: WhatsApp commands with platform detection
+    if (message.includes("open whatsapp") || message.includes("whatsapp")) {
+        // Detect platform
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isAndroid = /android/.test(userAgent);
+        const isWindows = /windows/.test(userAgent);
+        
+        if (isAndroid) {
+            // Try to open WhatsApp app on Android
+            try {
+                // Attempt to open WhatsApp app
+                window.location.href = 'whatsapp://';
+                speak("Opening WhatsApp app on your phone...");
+            } catch (error) {
+                // Fallback to WhatsApp Web
+                window.open("https://web.whatsapp.com", "_blank");
+                speak("Opening WhatsApp Web...");
+            }
+        } else if (isWindows) {
+            // Try to open WhatsApp Desktop app on Windows
+            try {
+                // Attempt to open WhatsApp Desktop app
+                window.location.href = 'whatsapp://';
+                speak("Opening WhatsApp Desktop app...");
+            } catch (error) {
+                // Fallback to WhatsApp Web
+                window.open("https://web.whatsapp.com", "_blank");
+                speak("Opening WhatsApp Web...");
+            }
+        } else {
+            // Fallback for other platforms
+            window.open("https://web.whatsapp.com", "_blank");
+            speak("Opening WhatsApp Web...");
+        }
+        return;
+    }
     // NEW: LinkedIn commands
     if (message.includes("open linkedin") || message.includes("linkedin")) {
         window.open("https://linkedin.com", "_blank");
@@ -315,3 +350,4 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
