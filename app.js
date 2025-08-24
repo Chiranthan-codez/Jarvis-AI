@@ -128,6 +128,89 @@ function takeCommand(message) {
         return;
     }
     
+    // NEW: LinkedIn commands
+    if (message.includes("open linkedin") || message.includes("linkedin")) {
+        window.open("https://linkedin.com", "_blank");
+        speak("Opening LinkedIn...");
+        return;
+    }
+    
+    // NEW: Weather commands
+    if (message.includes('weather') || message.includes('temperature') || message.includes('forecast')) {
+        // Try to get user's location for weather
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const weatherUrl = `https://openweathermap.org/weather?lat=${lat}&lon=${lon}`;
+                window.open(weatherUrl, "_blank");
+                speak("Opening weather forecast for your location...");
+            }, (error) => {
+                // Fallback to general weather site
+                window.open("https://weather.com", "_blank");
+                speak("Opening Weather.com for weather information...");
+            });
+        } else {
+            // Fallback to general weather site
+            window.open("https://weather.com", "_blank");
+            speak("Opening Weather.com for weather information...");
+        }
+        return;
+    }
+    
+    // NEW: Enhanced music and song commands
+    if (message.includes('play music') || message.includes('music') || message.includes('songs') || message.includes('song')) {
+        // Try to open Spotify first
+        try {
+            window.open("https://open.spotify.com", "_blank");
+            speak("Opening Spotify for music...");
+        } catch (error) {
+            // Fallback to YouTube Music
+            window.open("https://music.youtube.com", "_blank");
+            speak("Opening YouTube Music for songs...");
+        }
+        return;
+    }
+    
+    // NEW: Specific music platform commands
+    if (message.includes('spotify')) {
+        window.open("https://open.spotify.com", "_blank");
+        speak("Opening Spotify...");
+        return;
+    }
+    
+    if (message.includes('youtube music') || message.includes('yt music')) {
+        window.open("https://music.youtube.com", "_blank");
+        speak("Opening YouTube Music...");
+        return;
+    }
+    
+    if (message.includes('apple music')) {
+        window.open("https://music.apple.com", "_blank");
+        speak("Opening Apple Music...");
+        return;
+    }
+    
+    if (message.includes('amazon music')) {
+        window.open("https://music.amazon.com", "_blank");
+        speak("Opening Amazon Music...");
+        return;
+    }
+    
+    // NEW: Play specific songs (opens YouTube search)
+    if (message.includes('play') && (message.includes('song') || message.includes('music'))) {
+        const songName = message.replace(/play\s+(song\s+)?(music\s+)?/i, '').trim();
+        if (songName) {
+            const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(songName + ' song')}`;
+            window.open(searchUrl, "_blank");
+            speak(`Searching for ${songName} on YouTube...`);
+        } else {
+            window.open("https://music.youtube.com", "_blank");
+            speak("Opening YouTube Music for songs...");
+        }
+        return;
+    }
+    
     // Search commands
     if (message.includes('what is') || message.includes('who is') || message.includes('what are') || message.includes('how to')) {
         const searchQuery = message.replace(/^(what is|who is|what are|how to)\s+/i, '').trim();
@@ -181,21 +264,9 @@ function takeCommand(message) {
         return;
     }
     
-    // Weather command (placeholder)
-    if (message.includes('weather')) {
-        speak("I'm sorry, I don't have access to weather information yet. You can check a weather website.");
-        return;
-    }
-    
-    // Music commands
-    if (message.includes('play music') || message.includes('music')) {
-        speak("I'm sorry, I can't play music directly. You can open Spotify or YouTube for music.");
-        return;
-    }
-    
     // Help command
     if (message.includes('help') || message.includes('what can you do')) {
-        speak("I can help you with opening websites, searching the internet, telling time and date, and answering questions. Just ask me what you need!");
+        speak("I can help you with opening websites like Google, YouTube, Facebook, LinkedIn, GitHub, searching the internet, playing music on Spotify and YouTube Music, checking weather, telling time and date, and answering questions. Just ask me what you need!");
         return;
     }
     
