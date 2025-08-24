@@ -290,14 +290,58 @@ function takeCommand(message) {
     
     // Calculator command
     if (message.includes('calculator')) {
-        try {
-            window.open('Calculator:///');
-            speak("Opening Calculator");
-        } catch (error) {
-            speak("I'm sorry, I couldn't open the calculator. You can use the Windows calculator instead.");
+        // Detect platform for appropriate calculator
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isAndroid = /android/.test(userAgent);
+        const isWindows = /windows/.test(userAgent);
+        
+        if (isAndroid) {
+            // Try to open Android calculator app
+            try {
+                window.location.href = 'calculator://';
+                speak("Opening Calculator app on your phone...");
+            } catch (error) {
+                // Fallback to web calculator
+                window.open("https://www.calculator.net", "_blank");
+                speak("Opening web calculator...");
+            }
+        } else if (isWindows) {
+            // Try to open Windows calculator
+            try {
+                window.location.href = 'calculator://';
+                speak("Opening Windows Calculator...");
+            } catch (error) {
+                // Fallback to web calculator
+                window.open("https://www.calculator.net", "_blank");
+                speak("Opening web calculator...");
+            }
+        } else {
+            // Fallback for other platforms
+            window.open("https://www.calculator.net", "_blank");
+            speak("Opening web calculator...");
         }
         return;
     }
+    
+    // NEW: Phone/Call commands for Android
+    if (message.includes('phone') || message.includes('call') || message.includes('dialer')) {
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isAndroid = /android/.test(userAgent);
+        
+        if (isAndroid) {
+            // Try to open Android phone/dialer app
+            try {
+                window.location.href = 'tel:';
+                speak("Opening Phone app on your Android device...");
+            } catch (error) {
+                speak("I'm sorry, I couldn't open the phone app. You can manually open it from your home screen.");
+            }
+        } else {
+            speak("Phone app is only available on mobile devices. You can use your computer's calling apps instead.");
+        }
+        return;
+    }
+    
     
     // Help command
     if (message.includes('help') || message.includes('what can you do')) {
@@ -350,4 +394,5 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
