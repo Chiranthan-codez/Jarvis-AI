@@ -154,7 +154,7 @@ function takeCommand(message) {
             // Try to open WhatsApp Desktop app on Windows
             try {
                 // Attempt to open WhatsApp Desktop app
-                window.location.href = 'whatsapp://';
+                window.location.href = "whatsapp://send";
                 speak("Opening WhatsApp Desktop app...");
             } catch (error) {
                 // Fallback to WhatsApp Web
@@ -480,6 +480,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
