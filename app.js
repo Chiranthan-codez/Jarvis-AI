@@ -115,6 +115,11 @@ function takeCommand(message) {
         speak("Opening Facebook...");
         return;
     }
+     if (message.includes("open instagram")) {
+        window.open("https://instagram.com", "_blank");
+        speak("Opening Instagram...");
+        return;
+    }
     
     if (message.includes("open github")) {
         window.open("https://github.com", "_blank");
@@ -475,6 +480,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
