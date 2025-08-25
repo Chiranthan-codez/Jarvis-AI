@@ -178,6 +178,11 @@ function takeCommand(message) {
         speak("Opening LinkedIn...");
         return;
     }
+     if (message.includes("open lms") || message.includes("lms")) {
+        window.open("https://lighthouse.manipal.edu/d2l/home/7036", "_blank");
+        speak("Opening Lms...");
+        return;
+    }
     
       // NEW: Weather commands
     if (message.includes('weather') || message.includes('temperature') || message.includes('forecast')) {
@@ -484,6 +489,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
