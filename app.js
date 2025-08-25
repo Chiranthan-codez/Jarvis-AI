@@ -145,7 +145,10 @@ function takeCommand(message) {
                 // Attempt to open WhatsApp app
                 window.location.href = "whatsapp://send";
                 speak("Opening WhatsApp app on your phone...");
-                setTimeout(() => { window.location.href="https://play.google.com/stores/app/details?id=com.whatsapp";},2000);
+  // Fallback after a short delay
+  setTimeout(() => {
+    window.location.href = "https://play.google.com/store/apps/details?id=com.whatsapp";
+  }, 2000);
             } catch (error) {
                 // Fallback to WhatsApp Web
                 window.open("https://web.whatsapp.com", "_blank");
@@ -481,6 +484,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
