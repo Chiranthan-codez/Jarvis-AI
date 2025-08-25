@@ -143,7 +143,7 @@ function takeCommand(message) {
             // Try to open WhatsApp app on Android
             try {
                 // Attempt to open WhatsApp app
-                window.location.href = "whatsapp://";
+                window.location.href = "whatsapp://send";
                 speak("Opening WhatsApp app on your phone...");
   // Fallback after a short delay
   setTimeout(() => {
@@ -484,6 +484,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
