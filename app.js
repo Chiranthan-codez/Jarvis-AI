@@ -212,23 +212,24 @@ function takeCommand(message) {
                 else timeOfDay = 'night';
                 
                 // Basic weather estimation based on time and location
-                const weatherInfo = `It's ${timeOfDay} time. I can see your location coordinates are ${lat.toFixed(2)}, ${lon.toFixed(2)}. For detailed weather, I'll open a weather website for you.`;
+                const weatherInfo = `It's ${timeOfDay} time.For detailed weather, I'll open a weather website for you.`;
                 
                 content.textContent = weatherInfo;
                 speak(weatherInfo);
                 
                 // Open weather website after a short delay
-               
+                setTimeout(() => {
+                     window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
                 
             }, (error) => {
                 content.textContent = "Location access denied. Opening Weather.com...";
                 speak("I couldn't access your location. Opening Weather.com for weather information...");
-                window.open("https://weather.com", "_blank");
+                window.open("https://www.accuweather.com/en/in/india-weather", "_blank");
             });
         } else {
             content.textContent = "Geolocation not supported. Opening Weather.com...";
             speak("Location services not available. Opening Weather.com for weather information...");
-            window.open("https://www.google.com/search?q=weather.&zx=1756218867069&no_sw_cr=1", "_blank");
+            window.open("https://www.accuweather.com/en/in/india-weather", "_blank");
         }
         return;
     }
@@ -434,6 +435,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
