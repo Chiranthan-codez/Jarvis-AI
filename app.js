@@ -220,7 +220,7 @@ function takeCommand(message) {
                 // Open weather website after a short delay
                 setTimeout(() => {
                      window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
-                
+                },5000);
             }, (error) => {
                 content.textContent = "Location access denied. Opening Weather.com...";
                 speak("I couldn't access your location. Opening Weather.com for weather information...");
@@ -435,6 +435,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
