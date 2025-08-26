@@ -218,11 +218,7 @@ function takeCommand(message) {
                 speak(weatherInfo);
                 
                 // Open weather website after a short delay
-                setTimeout(() => {
-                    const weatherUrl = `https://www.google.com/search?q=weather.&zx=1756218867069&no_sw_cr=1`;
-                    window.open(weatherUrl, "_blank");
-                    speak("Opening detailed weather information...");
-                }, 3000);
+               
                 
             }, (error) => {
                 content.textContent = "Location access denied. Opening Weather.com...";
@@ -438,6 +434,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
