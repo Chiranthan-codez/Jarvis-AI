@@ -185,7 +185,7 @@ function takeCommand(message) {
     }
     
       // NEW: Weather commands
-    if (message.includes('weather') || message.includes('temperature') || message.includes('forecast')) {
+    if (message.includes('what is the weather right now') || message.includes('temperature') || message.includes('weather forecast')) {
         // Try to get user's location for weather
          window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
         const finalText = "I found some information for " + message + " on Google";
@@ -435,6 +435,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
