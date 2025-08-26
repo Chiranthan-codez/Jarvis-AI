@@ -187,61 +187,10 @@ function takeCommand(message) {
       // NEW: Weather commands
     if (message.includes('weather') || message.includes('temperature') || message.includes('forecast')) {
         // Try to get user's location for weather
-        if (navigator.geolocation) {
-            content.textContent = "Getting weather information...";
-            speak("Getting weather information for your location...");
-            
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                
-                try {
-                    // Using OpenWeatherMap API (free tier)
-                    const apiKey = 'YOUR_API_KEY'; // You'll need to get a free API key from openweathermap.org
-                    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
-                    
-                    const response = await fetch(weatherUrl);
-                    const weatherData = await response.json();
-                    
-                    if (weatherData.cod === 200) {
-                        const temp = Math.round(weatherData.main.temp);
-                        const feelsLike = Math.round(weatherData.main.feels_like);
-                        const humidity = weatherData.main.humidity;
-                        const description = weatherData.weather[0].description;
-                        const city = weatherData.name;
-                        const country = weatherData.sys.country;
-                        
-                        const weatherInfo = `Weather in ${city}, ${country}: ${temp}°C, feels like ${feelsLike}°C. ${description}. Humidity: ${humidity}%`;
-                        
-                        content.textContent = weatherInfo;
-                        speak(weatherInfo);
-                    } else {
-                        throw new Error('Weather data not available');
-                    }
-                } catch (error) {
-                    console.error('Weather API error:', error);
-                    // Fallback to weather website
-                    const weatherUrl = `https://openweathermap.org/weather?lat=${lat}&lon=${lon}`;
-                    window.open(weatherUrl, "_blank");
-                    content.textContent = "Weather data unavailable. Opening weather website...";
-                    speak("I couldn't fetch weather data. Opening weather website instead...");
-                }
-            }, (error) => {
-                console.error('Geolocation error:', error);
-                // Fallback to general weather site
-                window.open("https://weather.com", "_blank");
-                content.textContent = "Location access denied. Opening Weather.com...";
-                speak("I couldn't access your location. Opening Weather.com for weather information...");
-            });
-        } else {
-            // Fallback to general weather site
-            window.open("https://weather.com", "_blank");
-            content.textContent = "Geolocation not supported. Opening Weather.com...";
-            speak("Location services not available. Opening Weather.com for weather information...");
-        }
-        return;
+         window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+        const finalText = "I found some information for " + message + " on Google";
+        speak(finalText);
     }
-    
     // Alternative weather command (no API key required)
     if (message.includes('weather info') || message.includes('weather details') || message.includes('current weather')) {
         if (navigator.geolocation) {
@@ -270,7 +219,7 @@ function takeCommand(message) {
                 
                 // Open weather website after a short delay
                 setTimeout(() => {
-                    const weatherUrl = `https://openweathermap.org/weather?lat=${lat}&lon=${lon}`;
+                    const weatherUrl = `https://www.google.com/search?q=weather.&zx=1756218867069&no_sw_cr=1`;
                     window.open(weatherUrl, "_blank");
                     speak("Opening detailed weather information...");
                 }, 3000);
@@ -283,7 +232,7 @@ function takeCommand(message) {
         } else {
             content.textContent = "Geolocation not supported. Opening Weather.com...";
             speak("Location services not available. Opening Weather.com for weather information...");
-            window.open("https://weather.com", "_blank");
+            window.open("https://www.google.com/search?q=weather.&zx=1756218867069&no_sw_cr=1", "_blank");
         }
         return;
     }
@@ -489,6 +438,7 @@ window.addEventListener('beforeunload', () => {
         recognition.stop();
     }
 });
+
 
 
 
